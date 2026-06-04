@@ -1,8 +1,8 @@
 {
   "project": "KYC Document Annotation - Practice Test",
   "version": "1.0",
-  "annotator": "",
-  "annotation_date": "",
+  "annotator": "Utkarsh Singh",
+  "annotation_date": "2026-06-02",
   "documents": [
     {
       "doc_id": "DOC001",
