@@ -1,89 +1,126 @@
 {
-  "sample_metadata": {
-    "sample_id": "KYC-QA-ERR-001",
-    "source": "synthetic_sample",
-    "contains_real_personal_data": false,
-    "purpose": "Demonstrate JSON annotation QA findings for document extraction."
-  },
-  "schema_version": "1.0",
-  "document": {
-    "document_type": "identity_card",
-    "document_country": "IN",
-    "page_count": 1,
-    "image_quality": "medium"
-  },
-  "ocr_extraction": {
-    "applicant": {
-      "full_name": "Riya Sharrna",
-      "date_of_birth": "1995/18/04",
-      "gender": "F",
-      "id_number": "ABCD1234"
+  "project": "KYC Document Annotation",
+  "version": "1.0",
+  "annotator": "Utkarsh Singh",
+  "annotation_date": "2026-06-02",
+  "documents": [
+    {
+      "doc_id": "DOC001",
+      "document_type": "KYC - Individual",
+      "source": "Muthoot Finance Application Form",
+      "page_count": 3,
+      "customer": {
+        "full_name": "Rajesh Kumar",
+        "dob": "1985-03-22",
+        "gender": "Male",
+        "nationality": "Indian",
+        "contact": {
+          "phone": "+91-XXXXXXXXXX",
+          "email": "rajesh.kumar@example.com",
+          "address": {
+            "street": "12, Gandhi Nagar",
+            "city": "Kanpur",
+            "state": "Uttar Pradesh",
+            "pincode": "208001"
+          }
+        }
+      },
+      "id_proofs": [
+        {
+          "type": "PAN",
+          "number": "ABCDE1234F",
+          "verified": true,
+          "confidence_score": 0.98,
+          "extraction_method": "OCR"
+        },
+        {
+          "type": "Aadhaar",
+          "number": "XXXX-XXXX-5678",
+          "verified": true,
+          "confidence_score": 0.95,
+          "extraction_method": "OCR"
+        }
+      ],
+      "financial_data": {
+        "annual_income": 480000,
+        "income_currency": "INR",
+        "employment_type": "Salaried",
+        "employer_name": "ABC Pvt Ltd"
+      },
+      "annotation": {
+        "reviewed_by": "Utkarsh Singh",
+        "review_date": "2026-06-02",
+        "status": "approved",
+        "fields_reviewed": 18,
+        "flags": [],
+        "notes": "All fields correctly extracted and placed. ID proofs verified against source document. No mismatches found."
+      }
     },
-    "address": {
-      "line1": "24 Lake View Road",
-      "city": "Pune",
-      "state": "MH",
-      "postal_code": "4110O1"
-    },
-    "issuer": {
-      "name": "Sample Identity Authority",
-      "issue_date": "2021-07-31",
-      "expiry_date": "2031-07-31"
+    {
+      "doc_id": "DOC002",
+      "document_type": "KYC - Individual",
+      "source": "Muthoot Finance Application Form",
+      "page_count": 3,
+      "customer": {
+        "full_name": "Priya Sharma",
+        "dob": "1992-07-15",
+        "gender": "Female",
+        "nationality": "Indian",
+        "contact": {
+          "phone": "+91-XXXXXXXXXX",
+          "email": "priya.sharma@example.com",
+          "address": {
+            "street": "45, Shastri Nagar",
+            "city": "Lucknow",
+            "state": "Uttar Pradesh",
+            "pincode": "226001"
+          }
+        }
+      },
+      "id_proofs": [
+        {
+          "type": "PAN",
+          "number": "FGHIJ5678K",
+          "verified": true,
+          "confidence_score": 0.97,
+          "extraction_method": "OCR"
+        },
+        {
+          "type": "Voter ID",
+          "number": "UP/12/345/678901",
+          "verified": false,
+          "confidence_score": 0.72,
+          "extraction_method": "OCR"
+        }
+      ],
+      "financial_data": {
+        "annual_income": 360000,
+        "income_currency": "INR",
+        "employment_type": "Self-Employed",
+        "employer_name": null
+      },
+      "annotation": {
+        "reviewed_by": "Utkarsh Singh",
+        "review_date": "2026-06-02",
+        "status": "flagged",
+        "fields_reviewed": 18,
+        "flags": [
+          {
+            "field": "id_proofs[1].verified",
+            "issue": "Voter ID confidence score below threshold (0.72 < 0.85). Manual re-verification required.",
+            "severity": "medium"
+          }
+        ],
+        "notes": "PAN verified successfully. Voter ID extraction unclear - flagged for manual review."
+      }
     }
-  },
-  "annotation_review": {
-    "status": "failed",
-    "reviewer_notes": "This synthetic sample intentionally includes extraction and annotation errors for QA demonstration.",
-    "validation_checks": [
-      {
-        "check_name": "json_parse",
-        "result": "passed",
-        "details": "File is valid JSON."
-      },
-      {
-        "check_name": "required_fields",
-        "result": "passed",
-        "details": "All required top-level fields are present."
-      },
-      {
-        "check_name": "nested_schema",
-        "result": "failed",
-        "details": "Several nested values do not match expected field formats."
-      }
-    ],
-    "errors": [
-      {
-        "field_path": "$.ocr_extraction.applicant.full_name",
-        "issue_type": "ocr_mismatch",
-        "observed_value": "Riya Sharrna",
-        "expected_value": "Riya Sharma",
-        "severity": "medium",
-        "comment": "OCR inserted an extra character in the surname."
-      },
-      {
-        "field_path": "$.ocr_extraction.applicant.date_of_birth",
-        "issue_type": "invalid_date_format",
-        "observed_value": "1995/18/04",
-        "expected_value": "1995-04-18",
-        "severity": "high",
-        "comment": "Date uses the wrong separator and month/day order."
-      },
-      {
-        "field_path": "$.ocr_extraction.applicant.id_number",
-        "issue_type": "pattern_mismatch",
-        "observed_value": "ABCD1234",
-        "expected_value": "ABCD12345",
-        "severity": "high",
-        "comment": "Dummy ID number is missing one digit for the expected sample schema."
-      },
-      {
-        "field_path": "$.ocr_extraction.address.postal_code",
-        "issue_type": "character_confusion",
-        "observed_value": "4110O1",
-        "expected_value": "411001",
-        "severity": "medium",
-        "comment": "OCR confused the digit zero with the letter O."
-      }
-    ]
+  ],
+  "summary": {
+    "total_documents": 2,
+    "approved": 1,
+    "flagged": 1,
+    "rejected": 0,
+    "total_fields_reviewed": 36,
+    "avg_confidence_score": 0.955
   }
 }
