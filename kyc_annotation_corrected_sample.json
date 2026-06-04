@@ -1,62 +1,203 @@
 {
-  "sample_metadata": {
-    "sample_id": "KYC-QA-COR-001",
-    "source": "synthetic_sample",
-    "contains_real_personal_data": false,
-    "paired_with": "KYC-QA-ERR-001",
-    "purpose": "Demonstrate corrected JSON annotation output after document extraction QA."
-  },
-  "schema_version": "1.0",
-  "document": {
-    "document_type": "identity_card",
-    "document_country": "IN",
-    "page_count": 1,
-    "image_quality": "medium"
-  },
-  "ocr_extraction": {
-    "applicant": {
-      "full_name": "Riya Sharma",
-      "date_of_birth": "1995-04-18",
-      "gender": "F",
-      "id_number": "ABCD12345"
-    },
-    "address": {
-      "line1": "24 Lake View Road",
-      "city": "Pune",
-      "state": "MH",
-      "postal_code": "411001"
-    },
-    "issuer": {
-      "name": "Sample Identity Authority",
-      "issue_date": "2021-07-31",
-      "expiry_date": "2031-07-31"
-    }
-  },
-  "annotation_review": {
-    "status": "passed",
-    "reviewer_notes": "Dummy record corrected after OCR extraction validation and schema review.",
-    "validation_checks": [
-      {
-        "check_name": "json_parse",
-        "result": "passed",
-        "details": "File is valid JSON."
+  "project": "KYC Document Annotation - Practice Test",
+  "version": "1.0",
+  "annotator": "",
+  "annotation_date": "",
+  "documents": [
+    {
+      "doc_id": "DOC001",
+      "document_type": "KYC - Individual",
+      "source": "Muthoot Finance Application Form",
+      "page_count": 3,
+      "customer": {
+        "full_name": "Rajesh Kumar",
+        "dob": "22-03-1985",
+        "gender": "Male",
+        "nationality": "Indian",
+        "contact": {
+          "phone": "+91-XXXXXXXXXX",
+          "email": "rajesh.kumar@example.com",
+          "address": {
+            "street": "12, Gandhi Nagar",
+            "city": "Kanpur",
+            "state": "Uttar Pradesh",
+            "pincode": 208001
+          }
+        }
       },
-      {
-        "check_name": "required_fields",
-        "result": "passed",
-        "details": "All required fields are present."
+      "id_proofs": [
+        {
+          "type": "PAN",
+          "number": "ABCDE1234F",
+          "verified": "true",
+          "confidence_score": 0.98,
+          "extraction_method": "OCR"
+        },
+        {
+          "type": "Aadhaar",
+          "number": "XXXX-XXXX-5678",
+          "verified": true,
+          "confidence_score": 1.45,
+          "extraction_method": "OCR"
+        }
+      ],
+      "financial_data": {
+        "annual_income": "480000",
+        "income_currency": "INR",
+        "employment_type": "Salaried",
+        "employer_name": "ABC Pvt Ltd"
       },
-      {
-        "check_name": "nested_schema",
-        "result": "passed",
-        "details": "Nested values match expected sample schema formats."
-      },
-      {
-        "check_name": "ocr_extraction_review",
-        "result": "passed",
-        "details": "Flagged OCR mismatches from the paired error sample are corrected."
+      "annotation": {
+        "reviewed_by": "Utkarsh Singh",
+        "review_date": "2026-06-02",
+        "status": "flagged",
+        "fields_reviewed": 18,
+        "flags": [
+          {
+            "flag_id": 1,
+            "field": "customer.contact.address.pincode",
+            "error_type": "Data Type Mismatch",
+            "found": 208001,
+            "expected": "\"208001\"",
+            "issue": "Pincode should be a string, not a number",
+            "severity": "medium"
+          },
+          {
+            "flag_id": 2,
+            "field": "customer.dob",
+            "error_type": "Date Format Error",
+            "found": "22-03-1985",
+            "expected": "1985-03-22",
+            "issue": "Date format should be YYYY-MM-DD (ISO 8601), not DD-MM-YYYY",
+            "severity": "high"
+          },
+          {
+            "flag_id": 3,
+            "field": "id_proofs[0].verified",
+            "error_type": "Data Type Mismatch",
+            "found": "true",
+            "expected": true,
+            "issue": "verified should be boolean (true), not string (\"true\")",
+            "severity": "high"
+          },
+          {
+            "flag_id": 4,
+            "field": "id_proofs[1].confidence_score",
+            "error_type": "Invalid Value",
+            "found": 1.45,
+            "expected": "between 0.0 and 1.0",
+            "issue": "Confidence score cannot exceed 1.0 - impossible value",
+            "severity": "high"
+          },
+          {
+            "flag_id": 5,
+            "field": "financial_data.annual_income",
+            "error_type": "Data Type Mismatch",
+            "found": "480000",
+            "expected": 480000,
+            "issue": "annual_income should be a number, not a string",
+            "severity": "medium"
+          }
+        ],
+        "notes": "5 errors found - 2 high, 3 medium severity. Date of Birth format is incorrect, which can lead to parsing failures. Pincode data type mismatch may cause validation issues. ID proof verification field has wrong data type, affecting logical checks. Confidence score exceeding 1.0 indicates a critical extraction error. Annual income as string may cause issues in financial calculations."
       }
-    ],
-    "errors": []
+    },
+    {
+      "doc_id": "DOC002",
+      "document_type": "KYC - Individual",
+      "source": "Muthoot Finance Application Form",
+      "page_count": 3,
+      "customer": {
+        "full_name": "Priya Sharma",
+        "dob": "1992-07-15",
+        "gender": "Female",
+        "nationality": "Indian",
+        "contact": {
+          "phone": "+91-XXXXXXXXXX",
+          "email": "priya.sharma@example.com",
+          "address": {
+            "street": "45, Shastri Nagar",
+            "pincode": "226001",
+            "state": "Lucknow",
+            "city": "Uttar Pradesh"
+          }
+        }
+      },
+      "id_proofs": [
+        {
+          "type": "PAN",
+          "number": "FGHIJ5678K",
+          "verified": true,
+          "confidence_score": 0.97,
+          "extraction_method": "OCR"
+        },
+        {
+          "type": "Voter ID",
+          "number": null,
+          "verified": false,
+          "confidence_score": 0.72,
+          "extraction_method": "OCR"
+        }
+      ],
+      "financial_data": {
+        "annual_income": 360000,
+        "income_currency": "INR",
+        "employment_type": null,
+        "employer_name": null
+      },
+      "annotation": {
+        "reviewed_by": "Utkarsh Singh",
+        "review_date": "2026-06-02",
+        "status": "flagged",
+        "fields_reviewed": 18,
+        "flags": [
+          {
+            "flag_id": 6,
+            "field": "customer.contact.address.city",
+            "error_type": "Wrong Value Placement",
+            "found": "Uttar Pradesh",
+            "expected": "Lucknow",
+            "issue": "City and State values are swapped - Lucknow is the city, Uttar Pradesh is the state",
+            "severity": "high"
+          },
+          {
+            "flag_id": 7,
+            "field": "id_proofs[1].number",
+            "error_type": "Missing Value",
+            "found": null,
+            "expected": "Voter ID number string",
+            "issue": "Voter ID number is missing, which is critical for identity verification",
+            "severity": "high"
+          },
+          {
+            "flag_id": 8,
+            "field": "customer.contact.address.state",
+            "error_type": "Wrong Value Placement",
+            "found": "Lucknow",
+            "expected": "Uttar Pradesh",
+            "issue": "City and State values are swapped - Lucknow is the city, Uttar Pradesh is the state",
+            "severity": "high"
+          },
+          {
+            "flag_id": 9,
+            "field": "financial_data.employment_type",
+            "error_type": "Missing Value",
+            "found": null,
+            "expected": "Valid employment type string",
+            "issue": "Employment type is null - required field missing",
+            "severity": "medium"
+          }
+        ],
+        "notes": "4 errors found - 3 high, 1 medium severity. City and state values are swapped. Voter ID number is missing. Employment type is null."
+      }
+    }
+  ],
+  "summary": {
+    "total_documents": 2,
+    "approved": 0,
+    "flagged": 2,
+    "rejected": 0,
+    "total_fields_reviewed": 36,
+    "avg_confidence_score": 0.89
   }
 }
