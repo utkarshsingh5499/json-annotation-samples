@@ -1,0 +1,62 @@
+{
+  "sample_metadata": {
+    "sample_id": "KYC-QA-COR-001",
+    "source": "synthetic_sample",
+    "contains_real_personal_data": false,
+    "paired_with": "KYC-QA-ERR-001",
+    "purpose": "Demonstrate corrected JSON annotation output after document extraction QA."
+  },
+  "schema_version": "1.0",
+  "document": {
+    "document_type": "identity_card",
+    "document_country": "IN",
+    "page_count": 1,
+    "image_quality": "medium"
+  },
+  "ocr_extraction": {
+    "applicant": {
+      "full_name": "Riya Sharma",
+      "date_of_birth": "1995-04-18",
+      "gender": "F",
+      "id_number": "ABCD12345"
+    },
+    "address": {
+      "line1": "24 Lake View Road",
+      "city": "Pune",
+      "state": "MH",
+      "postal_code": "411001"
+    },
+    "issuer": {
+      "name": "Sample Identity Authority",
+      "issue_date": "2021-07-31",
+      "expiry_date": "2031-07-31"
+    }
+  },
+  "annotation_review": {
+    "status": "passed",
+    "reviewer_notes": "Dummy record corrected after OCR extraction validation and schema review.",
+    "validation_checks": [
+      {
+        "check_name": "json_parse",
+        "result": "passed",
+        "details": "File is valid JSON."
+      },
+      {
+        "check_name": "required_fields",
+        "result": "passed",
+        "details": "All required fields are present."
+      },
+      {
+        "check_name": "nested_schema",
+        "result": "passed",
+        "details": "Nested values match expected sample schema formats."
+      },
+      {
+        "check_name": "ocr_extraction_review",
+        "result": "passed",
+        "details": "Flagged OCR mismatches from the paired error sample are corrected."
+      }
+    ],
+    "errors": []
+  }
+}

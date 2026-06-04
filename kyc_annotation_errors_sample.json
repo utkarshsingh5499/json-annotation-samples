@@ -1,0 +1,89 @@
+{
+  "sample_metadata": {
+    "sample_id": "KYC-QA-ERR-001",
+    "source": "synthetic_sample",
+    "contains_real_personal_data": false,
+    "purpose": "Demonstrate JSON annotation QA findings for document extraction."
+  },
+  "schema_version": "1.0",
+  "document": {
+    "document_type": "identity_card",
+    "document_country": "IN",
+    "page_count": 1,
+    "image_quality": "medium"
+  },
+  "ocr_extraction": {
+    "applicant": {
+      "full_name": "Riya Sharrna",
+      "date_of_birth": "1995/18/04",
+      "gender": "F",
+      "id_number": "ABCD1234"
+    },
+    "address": {
+      "line1": "24 Lake View Road",
+      "city": "Pune",
+      "state": "MH",
+      "postal_code": "4110O1"
+    },
+    "issuer": {
+      "name": "Sample Identity Authority",
+      "issue_date": "2021-07-31",
+      "expiry_date": "2031-07-31"
+    }
+  },
+  "annotation_review": {
+    "status": "failed",
+    "reviewer_notes": "This synthetic sample intentionally includes extraction and annotation errors for QA demonstration.",
+    "validation_checks": [
+      {
+        "check_name": "json_parse",
+        "result": "passed",
+        "details": "File is valid JSON."
+      },
+      {
+        "check_name": "required_fields",
+        "result": "passed",
+        "details": "All required top-level fields are present."
+      },
+      {
+        "check_name": "nested_schema",
+        "result": "failed",
+        "details": "Several nested values do not match expected field formats."
+      }
+    ],
+    "errors": [
+      {
+        "field_path": "$.ocr_extraction.applicant.full_name",
+        "issue_type": "ocr_mismatch",
+        "observed_value": "Riya Sharrna",
+        "expected_value": "Riya Sharma",
+        "severity": "medium",
+        "comment": "OCR inserted an extra character in the surname."
+      },
+      {
+        "field_path": "$.ocr_extraction.applicant.date_of_birth",
+        "issue_type": "invalid_date_format",
+        "observed_value": "1995/18/04",
+        "expected_value": "1995-04-18",
+        "severity": "high",
+        "comment": "Date uses the wrong separator and month/day order."
+      },
+      {
+        "field_path": "$.ocr_extraction.applicant.id_number",
+        "issue_type": "pattern_mismatch",
+        "observed_value": "ABCD1234",
+        "expected_value": "ABCD12345",
+        "severity": "high",
+        "comment": "Dummy ID number is missing one digit for the expected sample schema."
+      },
+      {
+        "field_path": "$.ocr_extraction.address.postal_code",
+        "issue_type": "character_confusion",
+        "observed_value": "4110O1",
+        "expected_value": "411001",
+        "severity": "medium",
+        "comment": "OCR confused the digit zero with the letter O."
+      }
+    ]
+  }
+}
